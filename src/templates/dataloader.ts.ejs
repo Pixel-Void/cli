@@ -1,0 +1,13 @@
+import { Service } from 'typedi';
+import { Dataloader } from './interfaces/dataloader';
+
+export interface <%= props.name %>Loader {}
+
+@Service()
+export default class <%= props.name %>Dataloader {
+  public get loaders(): <%= props.name %>Loader {
+    return ({
+      // return loaders here
+    });
+  }
+}
