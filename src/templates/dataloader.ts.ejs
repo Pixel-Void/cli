@@ -1,13 +1,23 @@
 import { Service } from 'typedi';
-import { Dataloader } from './interfaces/dataloader';
+import DataLoader from 'dataloader';
 
-export interface <%= props.name %>Loader {}
+export interface <%= props.name %>Loader {
+  example: DataLoader<any, any>;
+}
 
 @Service()
 export default class <%= props.name %>Dataloader {
+  private get example(): DataLoader<any, any> {
+    return new DataLoader(async keys => {
+      // use `batch` or `batchMany` to return
+      return keys.map(key => key);
+    });
+  }
+
   public get loaders(): <%= props.name %>Loader {
     return ({
       // return loaders here
+      example: this.example,
     });
   }
 }

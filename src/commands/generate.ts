@@ -8,12 +8,14 @@ module.exports = {
     const {
       parameters,
       template: { generate },
-      print: { info }
+      print: { spin }
     } = toolbox
 
     const name = parameters.first
 
     const target = 'src/dataloaders'
+
+    const spinner = spin(`Generating ${target}/${name}-dataloader.ts`)
 
     await generate({
       template: 'dataloader.ts.ejs',
@@ -21,6 +23,17 @@ module.exports = {
       props: { name: name.charAt(0).toUpperCase() + name.slice(1) }
     })
 
-    info(`Generated file at ${target}/${name}-dataloader.ts`)
+    spinner.succeed(`Generated file at ${target}/${name}-dataloader.ts`)
+
+    const indexSpinner = spin(`Adding info to ${target}/index.ts`)
+
+    await generate({
+      template: 'dataloader-index.ts.ejs',
+      target: `${target}/index.ts`,
+      props: { dataloaders: toolbox.filesystem.list(`${target}`).filter(loader => loader.includes('-dataloader')).map(loader => loader.split('-')[0]) }
+    })
+
+    indexSpinner.succeed()
+
   }
 }
